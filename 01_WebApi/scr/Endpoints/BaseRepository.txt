@@ -1,0 +1,28 @@
+using Microsoft.AspNetCore.Http;
+using DataLib;
+using Microsoft.AspNetCore.Routing;
+
+namespace WebApi.Endpoints;
+
+internal abstract class BaseRepository<T, U>
+    where T : class
+    where U : class
+{
+    private readonly IDatabaseRepository<T, U> _data;
+
+    internal protected BaseRepository(IDatabaseRepository<T, U> data)
+    {
+        _data = data;
+    }
+
+    protected virtual void MapEndpoints(IEndpointRouteBuilder routes, string routePrefix)
+    {
+        // var group = routes.MapGroup(routePrefix);
+    }
+
+    internal virtual async Task<IResult> Get(int id)
+    {
+        var result = await _data.Get(id);
+        return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+}
